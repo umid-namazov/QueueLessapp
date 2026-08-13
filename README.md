@@ -8,15 +8,17 @@
 
 ## 📱 Screenshots
 
+<p align="center">
+  <img src="screenshots/splash.jpg" width="260" alt="Splash screen">
+</p>
+
 | Home / Dashboard | Focus Timer (Pomodoro) | AI Assistant |
 |---|---|---|
-| ![Dashboard](screenshots/dashboard.jpg) | ![Pomodoro](screenshots/pomodoro.jpg) | ![AI Assistant](screenshots/ai-assistant.jpg) |
+| <img src="screenshots/dashboard.jpg" width="230" alt="Dashboard"> | <img src="screenshots/pomodoro.jpg" width="230" alt="Pomodoro"> | <img src="screenshots/ai-assistant.jpg" width="230" alt="AI Assistant"> |
 
 | Notes / Board | Full Menu |
 |---|---|
-| ![Notepad](screenshots/notepad.jpg) | ![Menu](screenshots/menu.jpg) |
-
-> Add your screenshots to a `/screenshots` folder in the repo and update the file names above to match.
+| <img src="screenshots/notepad.jpg" width="230" alt="Notepad"> | <img src="screenshots/menu.jpg" width="230" alt="Menu"> |
 
 ---
 
