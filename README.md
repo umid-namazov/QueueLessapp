@@ -1,8 +1,8 @@
-# 🎓 Talaba Super App
+# 🎓 QueueLessapp
 
 > Study, plan, and track your academic life — all in one place.
 
-**Talaba Super App** is an all-in-one productivity web app built for students. It combines a class schedule, homework tracker, exam countdown, Pomodoro focus timer, notes, and an AI study assistant into a single lightweight, offline-friendly interface.
+**QueueLessapp** is an all-in-one productivity web app built for students. It combines a class schedule, homework tracker, exam countdown, Pomodoro focus timer, notes, and an AI study assistant into a single lightweight, offline-friendly interface.
 
 ---
 
@@ -52,7 +52,7 @@
 
 ## 🚀 Live Demo
 
-🔗 [Try it here](https://umid-namazov.github.io/talaba-super-app/)
+🔗 [Try it here](https://umid-namazov.github.io/QueueLessapp/)
 
 *(Enable GitHub Pages in repo Settings → Pages → set source to `main` branch to activate this link.)*
 
@@ -61,8 +61,8 @@
 ## 📦 Installation
 
 ```bash
-git clone https://github.com/umid-namazov/talaba-super-app.git
-cd talaba-super-app
+git clone https://github.com/umid-namazov/QueueLessapp.git
+cd QueueLessapp
 ```
 
 Then simply open `index.html` in your browser — no build step or server required.
