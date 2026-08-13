@@ -1,0 +1,246 @@
+/* ============================================
+   QueueLess — Navbatni oldindan band qilish ilovasi
+   Stylesheet
+   ============================================ */
+
+       QUEUELESS STANDALONE WEB APP FOR ACODE / MOBILE BROWSER
+       Toshkent 2026 • 100% Offline Ishlaydigan To'liq Ilova
+       ======================================================== */
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-light: #eff6ff;
+      --accent-green: #10b981;
+      --accent-yellow: #f59e0b;
+      --accent-red: #ef4444;
+      --bg-light: #f8fafc;
+      --surface-light: #ffffff;
+      --text-dark: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --card-radius: 16px;
+      --btn-radius: 12px;
+      --shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: #0f172a;
+      color: var(--text-dark);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Mobile Container Frame */
+    .app-container {
+      width: 100%;
+      max-width: 440px;
+      height: 100vh;
+      max-height: 920px;
+      background: var(--bg-light);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+    }
+
+    @media (min-width: 500px) {
+      .app-container {
+        height: 90vh;
+        border-radius: 36px;
+        border: 8px solid #1e293b;
+      }
+    }
+
+    /* Top Bar Switcher (Mijoz / Biznes / AI / Taqdimot) */
+    .top-mode-bar {
+      background: #0f172a;
+      color: white;
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      z-index: 60;
+    }
+
+    .mode-pills {
+      display: flex;
+      gap: 6px;
+      background: #1e293b;
+      padding: 3px;
+      border-radius: 10px;
+    }
+
+    .mode-pill-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 9px;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+
+    .mode-pill-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    /* Screen Area */
+    .screen-content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Bottom Navigation Bar */
+    .bottom-navbar {
+      height: 62px;
+      background: #ffffff;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 50;
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 600;
+      gap: 3px;
+      cursor: pointer;
+      width: 25%;
+    }
+
+    .nav-btn.active {
+      color: var(--primary);
+    }
+
+    /* UI Elements & Cards */
+    .card {
+      background: white;
+      border-radius: var(--card-radius);
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: var(--btn-radius);
+      border: none;
+      background: var(--primary);
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      transition: 0.15s;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #f1f5f9;
+      color: #334155;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-danger {
+      background: #fee2e2;
+      color: var(--accent-red);
+      border: 1px solid #fca5a5;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid #cbd5e1;
+      font-size: 14px;
+      margin-bottom: 12px;
+      outline: none;
+    }
+
+    .input-field:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .badge-green { background: #dcfce7; color: #15803d; }
+    .badge-blue { background: #dbeafe; color: #1d4ed8; }
+    .badge-yellow { background: #fef3c7; color: #b45309; }
+    .badge-red { background: #fee2e2; color: #b91c1c; }
+
+    /* QR Ticket Card */
+    .qr-ticket-card {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+      border: 2px dashed #93c5fd;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .qr-visual {
+      width: 150px;
+      height: 150px;
+      margin: 12px auto;
+      display: block;
+    }
+
+    /* Dark Mode support */
+    .dark-mode {
+      --bg-light: #0f172a;
+      --surface-light: #1e293b;
+      --text-dark: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+    }
+    .dark-mode .app-container { background: #0f172a; }
+    .dark-mode .card, .dark-mode .bottom-navbar { background: #1e293b; border-color: #334155; }
+    .dark-mode .input-field { background: #0f172a; border-color: #334155; color: white; }

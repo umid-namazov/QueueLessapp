@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>QueueLess — Navbatni jadvalga aylantiramiz</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="app" class="app-container">
+
+    <!-- Top Mode Switcher (Client / Business / AI / Slides) -->
+    <div class="top-mode-bar">
+      <div style="font-weight:900; font-size:14px; display:flex; align-items:center; gap:6px;">
+        <span style="background:#2563eb; color:white; padding:2px 7px; border-radius:6px; font-size:11px;">Q</span>
+        QueueLess
+      </div>
+      <div class="mode-pills">
+        <button class="mode-pill-btn active" onclick="switchMainMode('client')">📱 Mijoz</button>
+        <button class="mode-pill-btn" onclick="switchMainMode('business')">💼 Biznes</button>
+        <button class="mode-pill-btn" onclick="switchMainMode('ai')">🧠 AI</button>
+        <button class="mode-pill-btn" onclick="switchMainMode('deck')">📊 Reja</button>
+      </div>
+    </div>
+
+    <!-- Screen Render Area -->
+    <div id="screen-container" class="screen-content">
+      <!-- Dynamic Screens Injected Here -->
+    </div>
+
+    <!-- Client Bottom Nav (Visible only on Client Main Screens) -->
+    <div id="bottom-nav" class="bottom-navbar">
+      <button class="nav-btn active" onclick="showClientScreen('home')">
+        <span style="font-size:18px;">🏠</span>
+        <span>Asosiy</span>
+      </button>
+      <button class="nav-btn" onclick="showClientScreen('map')">
+        <span style="font-size:18px;">🗺️</span>
+        <span>Xarita</span>
+      </button>
+      <button class="nav-btn" onclick="showClientScreen('bookings')">
+        <span style="font-size:18px;">🎫</span>
+        <span>Talonim</span>
+      </button>
+      <button class="nav-btn" onclick="showClientScreen('profile')">
+        <span style="font-size:18px;">👤</span>
+        <span>Profil</span>
+      </button>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

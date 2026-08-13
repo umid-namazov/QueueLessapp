@@ -1,0 +1,723 @@
+/* ============================================
+   QueueLess — Application Logic
+   LocalStorage asosida ishlaydigan demo versiya
+   ============================================ */
+
+    /* ========================================================
+       QUEUELESS STANDALONE JAVASCRIPT ENGINE (ACODE COMPATIBLE)
+       ======================================================== */
+
+    // Local Database & State with LocalStorage sync
+    const DB = {
+      user: JSON.parse(localStorage.getItem('ql_user')) || {
+        id: 1,
+        ism: 'Jasur Alimov',
+        telefon: '+998 90 123 45 67',
+        isLoggedIn: true,
+        darkMode: false
+      },
+      services: [
+        { id: 1, nomi: 'Sartaroshxona xizmati', turi: 'barbershop', narx: 60000, emoji: '✂️', davomiyligi: 25, tavsif: 'Klassik va zamonaviy soch turmaklash, soqol tekislash.' },
+        { id: 2, turi: 'carwash', nomi: 'Avtomobil yuvish (Express)', narx: 75000, emoji: '🚗', davomiyligi: 35, tavsif: 'Kuzov yuvish, salon tozalash va vaks qoplash.' },
+        { id: 3, turi: 'clinic', nomi: 'Xususiy klinika qabuli', narx: 120000, emoji: '🏥', davomiyligi: 20, tavsif: 'Terapevt, stomatolog va pediatr ko\'rigi.' }
+      ],
+      branches: [
+        { id: 1, serviceId: 1, nomi: 'Barber 24 Yunusobod', manzil: 'Yunusobod 4-mavze, 12-uy (Mega Planet)', tuman: 'Yunusobod', lat: 41.3643, lng: 69.2882, ishVaqti: '09:00 - 22:00', xodimlar: 4, reyting: 4.9, activeQueue: 2, aiWaitMin: 4 },
+        { id: 2, serviceId: 1, nomi: 'Top Barber Chorsu', manzil: 'Navoiy ko\'chasi, 24-uy', tuman: 'Shayxontohur', lat: 41.3265, lng: 69.2372, ishVaqti: '08:30 - 21:30', xodimlar: 3, reyting: 4.7, activeQueue: 4, aiWaitMin: 12 },
+        { id: 3, serviceId: 2, nomi: 'AquaClean Chilonzor', manzil: 'Qatortol ko\'chasi, 45-uy', tuman: 'Chilonzor', lat: 41.2825, lng: 69.2136, ishVaqti: '08:00 - 23:00', xodimlar: 4, reyting: 4.6, activeQueue: 3, aiWaitMin: 8 },
+        { id: 4, serviceId: 3, nomi: 'Shifo Med Mirzo Ulug\'bek', manzil: 'Ziyolilar ko\'chasi, 9-uy', tuman: 'Mirzo Ulug\'bek', lat: 41.3412, lng: 69.3361, ishVaqti: '08:30 - 18:00', xodimlar: 8, reyting: 4.9, activeQueue: 1, aiWaitMin: 0 }
+      ],
+      bookings: JSON.parse(localStorage.getItem('ql_bookings')) || [
+        { id: 1, branchId: 1, branchNomi: 'Barber 24 Yunusobod', navbatRaqami: 'B-047', vaqt: '11:15', sana: 'Bugun', holati: 'confirmed', qrKod: 'QL-B47-ACODE-TICKET' }
+      ],
+      slots: [
+        { id: 101, vaqt: '09:30', band: true },
+        { id: 102, vaqt: '10:00', band: true },
+        { id: 103, vaqt: '10:30', band: false, tavsiya: false },
+        { id: 104, vaqt: '11:15', band: false, tavsiya: true },
+        { id: 105, vaqt: '11:45', band: false, tavsiya: false },
+        { id: 106, vaqt: '14:00', band: false, tavsiya: false },
+        { id: 107, vaqt: '15:00', band: false, tavsiya: true },
+        { id: 108, vaqt: '16:30', band: false, tavsiya: false },
+        { id: 109, vaqt: '18:00', band: false, tavsiya: false }
+      ]
+    };
+
+    function saveDB() {
+      localStorage.setItem('ql_bookings', JSON.stringify(DB.bookings));
+      localStorage.setItem('ql_user', JSON.stringify(DB.user));
+    }
+
+    let CURRENT_MODE = 'client';
+    let CURRENT_SCREEN = 'home';
+    let SELECTED_BRANCH = DB.branches[0];
+
+    // Initialize App
+    window.addEventListener('DOMContentLoaded', () => {
+      if (DB.user.darkMode) document.getElementById('app').classList.add('dark-mode');
+      showClientScreen('home');
+    });
+
+    // Top Navigation Switcher
+    function switchMainMode(mode) {
+      CURRENT_MODE = mode;
+      document.querySelectorAll('.mode-pill-btn').forEach((btn, idx) => {
+        btn.classList.toggle('active', ['client', 'business', 'ai', 'deck'][idx] === mode);
+      });
+
+      const nav = document.getElementById('bottom-nav');
+      const sc = document.getElementById('screen-container');
+
+      if (mode === 'client') {
+        nav.style.display = 'flex';
+        showClientScreen(CURRENT_SCREEN || 'home');
+      } else if (mode === 'business') {
+        nav.style.display = 'none';
+        renderBusinessScreen(sc);
+      } else if (mode === 'ai') {
+        nav.style.display = 'none';
+        renderAIScreen(sc);
+      } else if (mode === 'deck') {
+        nav.style.display = 'none';
+        renderDeckScreen(sc);
+      }
+    }
+
+    // ----------------------------------------------------
+    // CLIENT 9 MOBIL SCREENS
+    // ----------------------------------------------------
+    function showClientScreen(screenId) {
+      CURRENT_SCREEN = screenId;
+      const sc = document.getElementById('screen-container');
+      const nav = document.getElementById('bottom-nav');
+      
+      // Update nav highlights
+      document.querySelectorAll('.nav-btn').forEach(b => {
+        b.classList.remove('active');
+        if (b.getAttribute('onclick').includes(screenId)) b.classList.add('active');
+      });
+
+      // Show/hide bottom nav on special screens
+      if (['splash', 'login', 'register', 'detail', 'booking'].includes(screenId)) {
+        nav.style.display = 'none';
+      } else {
+        nav.style.display = 'flex';
+      }
+
+      switch (screenId) {
+        case 'splash': renderSplashScreen(sc); break;
+        case 'login': renderLoginScreen(sc); break;
+        case 'register': renderRegisterScreen(sc); break;
+        case 'home': renderHomeScreen(sc); break;
+        case 'map': renderMapScreen(sc); break;
+        case 'detail': renderDetailScreen(sc); break;
+        case 'booking': renderBookingSlotScreen(sc); break;
+        case 'bookings': renderMyBookingsScreen(sc); break;
+        case 'profile': renderProfileScreen(sc); break;
+      }
+    }
+
+    // 1. Splash Screen
+    function renderSplashScreen(c) {
+      c.innerHTML = `
+        <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:20px;">
+          <div style="width:84px; height:84px; background:linear-gradient(135deg, #2563eb, #1d4ed8); border-radius:24px; display:flex; align-items:center; justify-content:center; color:white; font-size:44px; font-weight:900; box-shadow:0 12px 30px rgba(37,99,235,0.4); margin-bottom:20px;">
+            Q
+          </div>
+          <h1 style="font-size:28px; font-weight:900; margin-bottom:4px;">QueueLess</h1>
+          <p style="font-size:13px; color:var(--text-muted); margin-bottom:28px;">Navbatni jadvalga aylantiramiz</p>
+          <div class="card" style="background:#eff6ff; border-color:#bfdbfe; font-size:12px; color:#1e40af; margin-bottom:24px;">
+            ⚡ <strong>Acode Versiya:</strong> Barcha 9 ta ekran, Biznes panel va AI algoritmlari tayyor.
+          </div>
+          <button class="btn" onclick="showClientScreen('home')">Ilovaga kirish 🚀</button>
+        </div>
+      `;
+    }
+
+    // 2. Login Screen
+    function renderLoginScreen(c) {
+      c.innerHTML = `
+        <div>
+          <button onclick="showClientScreen('home')" style="background:none; border:none; color:var(--text-muted); font-size:13px; margin-bottom:16px; cursor:pointer;">← Orqaga</button>
+          <h2 style="font-size:22px; font-weight:800; margin-bottom:4px;">Tizimga kirish 🔑</h2>
+          <p style="font-size:13px; color:var(--text-muted); margin-bottom:24px;">Telefon raqamingizni kiriting</p>
+          
+          <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Telefon</label>
+          <input type="text" class="input-field" value="+998 90 123 45 67">
+          
+          <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">SMS Kod / Parol</label>
+          <input type="password" class="input-field" value="123456">
+          
+          <button class="btn" onclick="alert('Xush kelibsiz!'); showClientScreen('home');">Kirish</button>
+          
+          <div style="text-align:center; margin-top:20px; font-size:13px;">
+            Hisobingiz yo'qmi? <a href="javascript:void(0)" onclick="showClientScreen('register')" style="color:var(--primary); font-weight:700;">Ro'yxatdan o'tish</a>
+          </div>
+        </div>
+      `;
+    }
+
+    // 3. Register Screen
+    function renderRegisterScreen(c) {
+      c.innerHTML = `
+        <div>
+          <button onclick="showClientScreen('login')" style="background:none; border:none; color:var(--text-muted); font-size:13px; margin-bottom:16px; cursor:pointer;">← Kirishga qaytish</button>
+          <h2 style="font-size:22px; font-weight:800; margin-bottom:4px;">Ro'yxatdan o'tish 📝</h2>
+          <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">QueueLess foydalanuvchisi bo'ling</p>
+          
+          <label style="font-size:12px; font-weight:700; display:block; margin-bottom:4px;">Ism familiya</label>
+          <input type="text" id="reg-ism" class="input-field" placeholder="Masalan: Sardor Aliyev">
+          
+          <label style="font-size:12px; font-weight:700; display:block; margin-bottom:4px;">Telefon</label>
+          <input type="text" class="input-field" placeholder="+998 90 ...">
+          
+          <button class="btn" onclick="handleRegister()">Hisob yaratish</button>
+        </div>
+      `;
+    }
+
+    function handleRegister() {
+      const name = document.getElementById('reg-ism').value || 'Foydalanuvchi';
+      DB.user.ism = name;
+      saveDB();
+      alert('Tabriklaymiz! Hisobingiz yaratildi.');
+      showClientScreen('home');
+    }
+
+    // 4. Home Screen
+    function renderHomeScreen(c) {
+      const activeTicket = DB.bookings.find(b => b.holati === 'confirmed');
+      
+      let bannerHtml = '';
+      if (activeTicket) {
+        bannerHtml = `
+          <div class="card" style="background:linear-gradient(135deg, #1e293b, #0f172a); color:white; cursor:pointer;" onclick="showClientScreen('bookings')">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span class="badge badge-green">Faol navbat</span>
+              <span style="font-size:20px; font-weight:900; color:#60a5fa;">${activeTicket.navbatRaqami}</span>
+            </div>
+            <div style="font-weight:700; font-size:15px; margin-top:6px;">${activeTicket.branchNomi}</div>
+            <div style="font-size:12px; color:#94a3b8; margin-top:2px;">⏰ Vaqt: ${activeTicket.vaqt} (Bugun) • Kutish: 0 daqiqa</div>
+          </div>
+        `;
+      }
+
+      let branchesHtml = DB.branches.map(b => `
+        <div class="card" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="openBranchDetail(${b.id})">
+          <div>
+            <div style="font-weight:800; font-size:14px;">${b.nomi}</div>
+            <div style="font-size:11px; color:var(--text-muted); margin:2px 0 4px 0;">📍 ${b.manzil.substring(0, 30)}...</div>
+            <div style="display:flex; gap:6px;">
+              <span class="badge badge-blue">⭐ ${b.reyting}</span>
+              <span class="badge badge-yellow">Navbat: ${b.activeQueue} kishi</span>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:18px; font-weight:900; color:var(--primary);">${b.aiWaitMin} daq</div>
+            <div style="font-size:10px; color:var(--text-muted);">AI kutish</div>
+          </div>
+        </div>
+      `).join('');
+
+      c.innerHTML = `
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+            <div>
+              <div style="font-size:12px; color:var(--text-muted);">Salom, ${DB.user.ism.split(' ')[0]} 👋</div>
+              <div style="font-size:18px; font-weight:900;">Navbatni rejalashtiring</div>
+            </div>
+            <div style="width:36px; height:36px; border-radius:50%; background:var(--primary); color:white; display:flex; align-items:center; justify-content:center; font-weight:800;">
+              ${DB.user.ism.charAt(0)}
+            </div>
+          </div>
+
+          ${bannerHtml}
+
+          <!-- AI Advice -->
+          <div class="card" style="background:#f0fdf4; border-color:#bbf7d0; padding:12px; display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+            <div style="font-size:12px; color:#166534;">
+              <strong>🧠 AI Tavsiya:</strong> Hozir Yunusobod filialida kutish atigi <strong>4 daqiqa</strong>!
+            </div>
+            <button onclick="openBranchDetail(1)" style="background:#16a34a; color:white; border:none; padding:5px 8px; border-radius:6px; font-size:10px; font-weight:700; cursor:pointer;">Band qilish</button>
+          </div>
+
+          <!-- Services grid -->
+          <div style="font-size:13px; font-weight:800; margin-bottom:10px;">Xizmat toifalari</div>
+          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:16px;">
+            <div class="card" style="text-align:center; padding:12px 6px; cursor:pointer; background:#eff6ff;" onclick="openBranchDetail(1)">
+              <div style="font-size:24px;">✂️</div>
+              <div style="font-size:11px; font-weight:700; color:#1e40af; margin-top:4px;">Sartarosh</div>
+            </div>
+            <div class="card" style="text-align:center; padding:12px 6px; cursor:pointer; background:#eff6ff;" onclick="openBranchDetail(3)">
+              <div style="font-size:24px;">🚗</div>
+              <div style="font-size:11px; font-weight:700; color:#1e40af; margin-top:4px;">Avtoyuvish</div>
+            </div>
+            <div class="card" style="text-align:center; padding:12px 6px; cursor:pointer; background:#eff6ff;" onclick="openBranchDetail(4)">
+              <div style="font-size:24px;">🏥</div>
+              <div style="font-size:11px; font-weight:700; color:#1e40af; margin-top:4px;">Klinika</div>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <div style="font-size:13px; font-weight:800;">Tavsiya etilgan filiallar</div>
+            <a href="javascript:void(0)" onclick="showClientScreen('map')" style="font-size:11px; color:var(--primary); font-weight:700;">Xarita →</a>
+          </div>
+
+          ${branchesHtml}
+        </div>
+      `;
+    }
+
+    function openBranchDetail(branchId) {
+      SELECTED_BRANCH = DB.branches.find(b => b.id === branchId) || DB.branches[0];
+      showClientScreen('detail');
+    }
+
+    // 5. Map Screen
+    function renderMapScreen(c) {
+      c.innerHTML = `
+        <div>
+          <h2 style="font-size:18px; font-weight:900; margin-bottom:4px;">Toshkent xaritasi 🗺️</h2>
+          <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">Filiallar va real vaqt kutish ko'rsatkichlari</p>
+
+          <div style="background:#e0f2fe; border-radius:16px; height:200px; position:relative; overflow:hidden; margin-bottom:14px; border:2px solid #bae6fd;">
+            <svg width="100%" height="100%" viewBox="0 0 400 200">
+              <path d="M 30 110 Q 150 40 250 120 T 380 90" fill="none" stroke="#93c5fd" stroke-width="8" />
+              <path d="M 120 10 Q 200 100 260 190" fill="none" stroke="#93c5fd" stroke-width="6" />
+            </svg>
+
+            <div onclick="openBranchDetail(1)" style="position:absolute; top:25px; left:160px; background:var(--primary); color:white; padding:4px 8px; border-radius:8px; font-size:10px; font-weight:700; cursor:pointer;">
+              ✂️ Yunusobod (4 daq)
+            </div>
+            <div onclick="openBranchDetail(2)" style="position:absolute; top:85px; left:90px; background:var(--primary); color:white; padding:4px 8px; border-radius:8px; font-size:10px; font-weight:700; cursor:pointer;">
+              ✂️ Chorsu (12 daq)
+            </div>
+            <div onclick="openBranchDetail(3)" style="position:absolute; top:125px; left:60px; background:#0284c7; color:white; padding:4px 8px; border-radius:8px; font-size:10px; font-weight:700; cursor:pointer;">
+              🚗 Chilonzor (8 daq)
+            </div>
+            <div onclick="openBranchDetail(4)" style="position:absolute; top:70px; left:240px; background:#16a34a; color:white; padding:4px 8px; border-radius:8px; font-size:10px; font-weight:700; cursor:pointer;">
+              🏥 Shifo Med (0 daq)
+            </div>
+          </div>
+
+          <div style="font-size:13px; font-weight:800; margin-bottom:8px;">Barcha filiallar:</div>
+          ${DB.branches.map(b => `
+            <div class="card" style="padding:12px; cursor:pointer;" onclick="openBranchDetail(${b.id})">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div style="font-weight:700; font-size:13px;">${b.nomi}</div>
+                <span class="badge badge-green">${b.aiWaitMin} daq kutish</span>
+              </div>
+              <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">📍 ${b.manzil}</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    // 6. Service Detail Screen
+    function renderDetailScreen(c) {
+      const b = SELECTED_BRANCH;
+      const s = DB.services.find(x => x.id === b.serviceId) || DB.services[0];
+
+      c.innerHTML = `
+        <div>
+          <button onclick="showClientScreen('home')" style="background:none; border:none; color:var(--text-muted); font-size:13px; margin-bottom:12px; cursor:pointer;">← Filiallarga qaytish</button>
+          
+          <div style="background:linear-gradient(135deg, #2563eb, #1e40af); height:120px; border-radius:18px; display:flex; align-items:center; justify-content:center; color:white; font-size:48px; margin-bottom:14px;">
+            ${s.emoji}
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <div>
+              <h2 style="font-size:18px; font-weight:900;">${b.nomi}</h2>
+              <div style="font-size:12px; color:var(--text-muted);">📍 ${b.manzil}</div>
+            </div>
+            <span class="badge badge-blue">⭐ ${b.reyting}</span>
+          </div>
+
+          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin:14px 0;">
+            <div class="card" style="padding:8px; text-align:center;">
+              <div style="font-size:10px; color:var(--text-muted);">Ish vaqti</div>
+              <div style="font-size:11px; font-weight:700;">${b.ishVaqti}</div>
+            </div>
+            <div class="card" style="padding:8px; text-align:center;">
+              <div style="font-size:10px; color:var(--text-muted);">Xodimlar</div>
+              <div style="font-size:11px; font-weight:700;">${b.xodimlar} kishi</div>
+            </div>
+            <div class="card" style="padding:8px; text-align:center;">
+              <div style="font-size:10px; color:var(--text-muted);">Xizmat narxi</div>
+              <div style="font-size:11px; font-weight:700;">${s.narx.toLocaleString()} so'm</div>
+            </div>
+          </div>
+
+          <div class="card" style="background:#f0fdf4; border-color:#bbf7d0; margin-bottom:16px;">
+            <div style="font-size:12px; font-weight:800; color:#166534;">🤖 AI Kutish Bashorati:</div>
+            <div style="font-size:12px; color:#15803d; margin-top:2px;">
+              Hozirgi kutish vaqti <strong>${b.aiWaitMin} daqiqa</strong>. Navbatda <strong>${b.activeQueue}</strong> kishi kutmoqda.
+            </div>
+          </div>
+
+          <button class="btn" onclick="showClientScreen('booking')">📅 Bo'sh vaqtni tanlash va Band qilish</button>
+        </div>
+      `;
+    }
+
+    // 7. Booking Slot Screen
+    let SELECTED_SLOT = null;
+    function renderBookingSlotScreen(c) {
+      const b = SELECTED_BRANCH;
+
+      let slotsHtml = DB.slots.map(s => {
+        return `
+          <div 
+            onclick="${s.band ? '' : `chooseSlot(${s.id}, '${s.vaqt}')`}"
+            id="slot-box-${s.id}"
+            style="
+              background: ${s.band ? '#f1f5f9' : s.tavsiya ? '#eff6ff' : '#ffffff'};
+              border: 1px solid ${s.band ? '#cbd5e1' : s.tavsiya ? '#3b82f6' : '#e2e8f0'};
+              color: ${s.band ? '#94a3b8' : '#0f172a'};
+              padding: 10px 6px;
+              border-radius: 10px;
+              text-align: center;
+              cursor: ${s.band ? 'not-allowed' : 'pointer'};
+            "
+          >
+            <div style="font-weight:800; font-size:13px;">${s.vaqt}</div>
+            <div style="font-size:9px; margin-top:2px;">
+              ${s.band ? 'Band' : s.tavsiya ? '⭐ Tavsiya' : 'Bo\'sh'}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      c.innerHTML = `
+        <div>
+          <button onclick="showClientScreen('detail')" style="background:none; border:none; color:var(--text-muted); font-size:13px; margin-bottom:10px; cursor:pointer;">← Filialga qaytish</button>
+          <h2 style="font-size:18px; font-weight:900; margin-bottom:4px;">Vaqtni tanlang</h2>
+          <div style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">Filial: <strong>${b.nomi}</strong></div>
+
+          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:16px;">
+            ${slotsHtml}
+          </div>
+
+          <div id="slot-confirm-box" style="display:none;" class="card">
+            <div style="font-size:12px; color:var(--text-muted);">Tanlangan vaqt:</div>
+            <div id="slot-time-text" style="font-size:18px; font-weight:900; color:var(--primary); margin:2px 0 6px 0;">--:--</div>
+            <div style="font-size:11px; color:#16a34a;">🔔 30 va 10 daqiqa oldin eslatma yuboriladi</div>
+          </div>
+
+          <button id="book-btn" class="btn" style="display:none;" onclick="confirmBooking()">✅ Navbatni tasdiqlash</button>
+        </div>
+      `;
+    }
+
+    function chooseSlot(id, time) {
+      SELECTED_SLOT = { id, time };
+      document.querySelectorAll('[id^="slot-box-"]').forEach(el => el.style.boxShadow = 'none');
+      document.getElementById(`slot-box-${id}`).style.boxShadow = '0 0 0 3px var(--primary)';
+      
+      document.getElementById('slot-confirm-box').style.display = 'block';
+      document.getElementById('slot-time-text').innerText = `${time} (Bugun)`;
+      document.getElementById('book-btn').style.display = 'flex';
+    }
+
+    function confirmBooking() {
+      if (!SELECTED_SLOT) return;
+      const b = SELECTED_BRANCH;
+      const ticketNum = 'B-' + Math.floor(100 + Math.random() * 900);
+      const newBooking = {
+        id: Date.now(),
+        branchId: b.id,
+        branchNomi: b.nomi,
+        navbatRaqami: ticketNum,
+        vaqt: SELECTED_SLOT.time,
+        sana: 'Bugun',
+        holati: 'confirmed',
+        qrKod: 'QL-' + ticketNum + '-VALID'
+      };
+      DB.bookings.unshift(newBooking);
+      saveDB();
+      alert(`Muvaffaqiyatli band qilindi!\nTalon raqamingiz: ${ticketNum}`);
+      showClientScreen('bookings');
+    }
+
+    // 8. My Bookings / QR Ticket Screen
+    function renderMyBookingsScreen(c) {
+      const active = DB.bookings.find(b => b.holati === 'confirmed') || DB.bookings[0];
+
+      if (!active) {
+        c.innerHTML = `
+          <div style="text-align:center; padding:40px 10px;">
+            <div style="font-size:44px; margin-bottom:12px;">🎫</div>
+            <h3 style="font-size:16px; font-weight:800; margin-bottom:6px;">Navbatlaringiz yo'q</h3>
+            <p style="font-size:12px; color:var(--text-muted); margin-bottom:20px;">Filiallardan birini tanlab navbat oling</p>
+            <button class="btn" onclick="showClientScreen('home')">Navbat olish</button>
+          </div>
+        `;
+        return;
+      }
+
+      // High-res SVG QR Code Representation
+      const qrSvg = `
+        <svg viewBox="0 0 100 100" class="qr-visual">
+          <rect width="100" height="100" fill="white" />
+          <rect x="10" y="10" width="26" height="26" fill="#0f172a" />
+          <rect x="14" y="14" width="18" height="18" fill="white" />
+          <rect x="18" y="18" width="10" height="10" fill="#0f172a" />
+          <rect x="64" y="10" width="26" height="26" fill="#0f172a" />
+          <rect x="68" y="14" width="18" height="18" fill="white" />
+          <rect x="72" y="18" width="10" height="10" fill="#0f172a" />
+          <rect x="10" y="64" width="26" height="26" fill="#0f172a" />
+          <rect x="14" y="68" width="18" height="18" fill="white" />
+          <rect x="18" y="72" width="10" height="10" fill="#0f172a" />
+          <rect x="44" y="14" width="12" height="12" fill="#0f172a" />
+          <rect x="44" y="36" width="16" height="12" fill="#0f172a" />
+          <rect x="64" y="44" width="12" height="16" fill="#0f172a" />
+          <rect x="44" y="64" width="24" height="24" fill="#0f172a" />
+          <rect x="74" y="74" width="16" height="16" fill="#0f172a" />
+        </svg>
+      `;
+
+      c.innerHTML = `
+        <div>
+          <h2 style="font-size:18px; font-weight:900; margin-bottom:4px;">Elektron Talon 🎫</h2>
+          <div style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">Joyiga borganda ushbu QR kodni ko'rsatasiz</div>
+
+          <div class="qr-ticket-card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:10px; font-weight:800; color:var(--text-muted);">QUEUELESS TALON</span>
+              <span class="badge badge-green">Tasdiqlangan</span>
+            </div>
+
+            <div style="font-size:38px; font-weight:900; color:var(--primary); margin:6px 0 2px 0;">
+              ${active.navbatRaqami}
+            </div>
+
+            <div style="font-weight:800; font-size:14px;">${active.branchNomi}</div>
+            <div style="font-size:11px; color:var(--text-muted);">📍 Toshkent filiali</div>
+
+            ${qrSvg}
+
+            <div style="font-family:monospace; font-size:11px; background:#f1f5f9; padding:4px 8px; border-radius:6px; display:inline-block; margin-bottom:8px;">
+              ${active.qrKod}
+            </div>
+
+            <div style="display:flex; justify-content:space-around; border-top:1px dashed #cbd5e1; padding-top:10px; margin-top:8px; font-size:12px;">
+              <div>
+                <div style="color:var(--text-muted); font-size:10px;">Sana</div>
+                <strong>${active.sana}</strong>
+              </div>
+              <div>
+                <div style="color:var(--text-muted); font-size:10px;">Vaqt</div>
+                <strong style="color:var(--primary);">${active.vaqt}</strong>
+              </div>
+              <div>
+                <div style="color:var(--text-muted); font-size:10px;">Kutish</div>
+                <strong style="color:#16a34a;">0 daqiqa</strong>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-danger" style="flex:1;" onclick="cancelBooking(${active.id})">Bekor qilish</button>
+            <button class="btn" style="flex:1;" onclick="alert('📲 PUSH XABAR:\\n\\nNavbatingizga 15 daqiqa qoldi! Iltimos yetib keling.')">🔔 Push sinash</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function cancelBooking(id) {
+      if (!confirm('Navbatni bekor qilmoqchimisiz?')) return;
+      DB.bookings = DB.bookings.filter(b => b.id !== id);
+      saveDB();
+      alert('Navbat bekor qilindi.');
+      showClientScreen('bookings');
+    }
+
+    // 9. Profile Screen
+    function renderProfileScreen(c) {
+      c.innerHTML = `
+        <div>
+          <h2 style="font-size:18px; font-weight:900; margin-bottom:12px;">Profil va Sozlamalar 👤</h2>
+          
+          <div class="card" style="display:flex; align-items:center; gap:14px;">
+            <div style="width:48px; height:48px; border-radius:50%; background:var(--primary); color:white; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:18px;">
+              ${DB.user.ism.charAt(0)}
+            </div>
+            <div>
+              <div style="font-weight:800; font-size:15px;">${DB.user.ism}</div>
+              <div style="font-size:12px; color:var(--text-muted);">${DB.user.telefon}</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border-color);">
+              <span style="font-size:13px; font-weight:600;">🌙 Qorong'i rejim (Dark mode)</span>
+              <input type="checkbox" ${DB.user.darkMode ? 'checked' : ''} onchange="toggleDark(this.checked)">
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border-color);">
+              <span style="font-size:13px; font-weight:600;">🔔 Push-eslatmalar (30/10 daq)</span>
+              <input type="checkbox" checked>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0;">
+              <span style="font-size:13px; font-weight:600;">🌐 Til</span>
+              <span style="font-size:12px; font-weight:700;">O'zbekcha 🇺🇿</span>
+            </div>
+          </div>
+
+          <div class="card" style="font-size:11px; color:var(--text-muted); line-height:1.5;">
+            <strong>QueueLess v1.0.0 (Acode Edition)</strong><br>
+            Toshkent, O'zbekiston — 2026<br>
+            4 kishilik jamoa hakaton va universitet loyihasi.
+          </div>
+
+          <button class="btn btn-secondary" onclick="showClientScreen('splash')">Chiqish</button>
+        </div>
+      `;
+    }
+
+    function toggleDark(isDark) {
+      DB.user.darkMode = isDark;
+      saveDB();
+      document.getElementById('app').classList.toggle('dark-mode', isDark);
+    }
+
+    // ----------------------------------------------------
+    // TAB 2: BUSINESS LIVE BOARD
+    // ----------------------------------------------------
+    let currentServingTicket = 'B-045';
+    function renderBusinessScreen(c) {
+      c.innerHTML = `
+        <div>
+          <h2 style="font-size:18px; font-weight:900; margin-bottom:4px;">💼 Biznes Navbat Paneli</h2>
+          <div style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">Filial: <strong>Barber 24 Yunusobod</strong></div>
+
+          <div class="card" style="background:linear-gradient(135deg, #1e293b, #0f172a); color:white; text-align:center; padding:20px;">
+            <div style="font-size:11px; color:#94a3b8; text-transform:uppercase; font-weight:700;">Hozir qabulda:</div>
+            <div id="biz-serving-num" style="font-size:44px; font-weight:900; color:#60a5fa; margin:6px 0;">${currentServingTicket}</div>
+            <div style="font-size:13px; color:#cbd5e1;">Mijoz xizmat olmoqda</div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px;">
+            <button class="btn" style="background:#16a34a;" onclick="callNextBiz()">📢 Chaqirish</button>
+            <button class="btn" style="background:#2563eb;" onclick="addWalkinBiz()">➕ Jonli mijoz</button>
+          </div>
+
+          <div class="card">
+            <div style="font-size:13px; font-weight:800; margin-bottom:10px;">Kutayotganlar ro'yxati:</div>
+            <div style="font-size:12px; line-height:2;">
+              <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border-color);">
+                <strong>#1 (B-047)</strong> <span>Jasur Alimov (11:15)</span> <span class="badge badge-yellow">Kutmoqda</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border-color);">
+                <strong>#2 (B-048)</strong> <span>Otabek R. (11:45)</span> <span class="badge badge-yellow">Kutmoqda</span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <strong>#3 (W-012)</strong> <span>Jonli mijoz (12:00)</span> <span class="badge badge-yellow">Kutmoqda</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function callNextBiz() {
+      currentServingTicket = 'B-047';
+      document.getElementById('biz-serving-num').innerText = currentServingTicket;
+      alert("Keyingi mijoz (B-047) chaqirildi! Xabar yuborildi.");
+    }
+
+    function addWalkinBiz() {
+      const name = prompt("Mijoz ismini kiriting:", "Jonli mijoz");
+      if (name) alert(`Jonli mijoz ${name} navbatga qo'shildi (Talon: W-015)`);
+    }
+
+    // ----------------------------------------------------
+    // TAB 3: AI / ML INTERACTIVE CALCULATOR
+    // ----------------------------------------------------
+    function renderAIScreen(c) {
+      c.innerHTML = `
+        <div>
+          <h2 style="font-size:18px; font-weight:900; margin-bottom:4px;">🧠 AI Kutish Bashorati</h2>
+          <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">XGBoost & Scikit-Learn modeli (Aniqlik: +79.7%)</p>
+
+          <div class="card" style="background:#f8fafc; border-color:#93c5fd;">
+            <label style="font-size:12px; font-weight:700; display:block; margin-bottom:4px;">Xizmat turi:</label>
+            <select id="ai-serv" class="input-field">
+              <option value="barbershop">Sartaroshxona (Barber 24)</option>
+              <option value="carwash">Avtoyuvish (AquaClean)</option>
+              <option value="clinic">Klinika (Shifo Med)</option>
+            </select>
+
+            <label style="font-size:12px; font-weight:700; display:block; margin-bottom:4px;">Soat:</label>
+            <select id="ai-h" class="input-field">
+              <option value="9">09:00 (Ertalab)</option>
+              <option value="14" selected>14:00 (Tushdan keyin)</option>
+              <option value="18">18:00 (Kechki pik soat)</option>
+            </select>
+
+            <button class="btn" onclick="calcAI()">🚀 Hisoblash</button>
+          </div>
+
+          <div id="ai-res-box" class="card" style="display:none; background:#eff6ff; border-color:#bfdbfe;">
+            <div style="font-size:11px; color:#1e40af; font-weight:700;">AI BASHORATI NATIJASI:</div>
+            <div id="ai-res-wait" style="font-size:32px; font-weight:900; color:var(--primary); margin:4px 0;">4 daqiqa</div>
+            <div id="ai-res-desc" style="font-size:12px; color:#1e3a8a;">Bo'sh vaqt. Navbat deyarli yo'q.</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function calcAI() {
+      const h = document.getElementById('ai-h').value;
+      const serv = document.getElementById('ai-serv').value;
+      let wait = 4;
+      let desc = "Bo'sh vaqt. Navbat deyarli yo'q.";
+
+      if (h === '18') {
+        wait = 24;
+        desc = "Kechki tirband vaqt. 20:00 ga band qilish tavsiya etiladi.";
+      } else if (h === '9' && serv === 'clinic') {
+        wait = 18;
+        desc = "Ertalabki shifokor qabuli tirband.";
+      }
+
+      document.getElementById('ai-res-box').style.display = 'block';
+      document.getElementById('ai-res-wait').innerText = `${wait} daqiqa`;
+      document.getElementById('ai-res-desc').innerText = desc;
+    }
+
+    // ----------------------------------------------------
+    // TAB 4: DECK / PRESENTATION
+    // ----------------------------------------------------
+    function renderDeckScreen(c) {
+      c.innerHTML = `
+        <div>
+          <h2 style="font-size:18px; font-weight:900; margin-bottom:8px;">📊 QueueLess Taqdimoti</h2>
+          
+          <div class="card">
+            <h3 style="font-size:14px; font-weight:800; color:var(--primary);">01. Muammo</h3>
+            <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">
+              Poliklinika (40-120 daq), sartaroshxona (15-45 daq) va avtoyuvish shoxobchalarida odamlar noaniq navbatlarda soatlab kutadi.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3 style="font-size:14px; font-weight:800; color:var(--primary);">02. Yechim (4 Qadam)</h3>
+            <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">
+              1. Filialni tanla → 2. Bo'sh slotni ko'r → 3. Bir bosishda band qil → 4. QR talon bilan 0 daqiqa kutib kir!
+            </p>
+          </div>
+
+          <div class="card">
+            <h3 style="font-size:14px; font-weight:800; color:var(--primary);">03. 4 Kishilik Jamoa</h3>
+            <div style="font-size:11px; line-height:1.6; margin-top:4px;">
+              📱 <strong>1-Kishi:</strong> Flutter UI/UX (9 ekran)<br>
+              ⚡ <strong>2-Kishi:</strong> FastAPI Backend & API<br>
+              🧠 <strong>3-Kishi:</strong> AI / ML XGBoost modeli<br>
+              🛠️ <strong>4-Kishi:</strong> Biznes paneli, DevOps & APK CI/CD
+            </div>
+          </div>
+        </div>
+      `;
+    }
