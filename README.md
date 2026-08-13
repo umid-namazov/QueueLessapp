@@ -18,7 +18,7 @@
 
 | Notes / Board | Full Menu |
 |---|---|
-| <img src="IMG_20260813_144255_339.jpg" width="230" alt="Notepad"> | <img src="menu.jpg" width="230" alt="Menu"> |
+| <img src="IMG_20260813_144255_339.jpg" width="230" alt="Notepad"> | <img src="IMG_20260813_144255_874.jpg" width="230" alt="Menu"> |
 
 ---
 
