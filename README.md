@@ -54,7 +54,7 @@
 
 🔗 [Try it here](https://umid-namazov.github.io/QueueLessapp/)
 
-*(Enable GitHub Pages in repo Settings → Pages → set source to `main` branch to activate this link.)*
+
 
 ---
 
