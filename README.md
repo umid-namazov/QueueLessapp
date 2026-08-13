@@ -9,7 +9,7 @@
 ## 📱 Screenshots
 
 <p align="center">
-  <img src="splash.jpg" width="260" alt="Splash screen">
+  <img src="IMG_20260813_144255_572.jpg" width="260" alt="Splash screen">
 </p>
 
 | Home / Dashboard | Focus Timer (Pomodoro) | AI Assistant |
