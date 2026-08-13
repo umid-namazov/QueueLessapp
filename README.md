@@ -14,7 +14,7 @@
 
 | Home / Dashboard | Focus Timer (Pomodoro) | AI Assistant |
 |---|---|---|
-| <img src="dashboard.jpg" width="230" alt="Dashboard"> | <img src="pomodoro.jpg" width="230" alt="Pomodoro"> | <img src="ai-assistant.jpg" width="230" alt="AI Assistant"> |
+| <img src="IMG_20260813_144255_813.jpg" width="230" alt="Dashboard"> | <img src="pomodoro.jpg" width="230" alt="Pomodoro"> | <img src="ai-assistant.jpg" width="230" alt="AI Assistant"> |
 
 | Notes / Board | Full Menu |
 |---|---|
