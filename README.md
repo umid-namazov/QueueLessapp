@@ -95,7 +95,7 @@ Ilova ichida **AI kutish vaqti bashorati** ishlaydi: xizmat turi va soatga qarab
 |---|---|
 | Frontend | HTML5, CSS3, JavaScript (Vanilla) |
 | Ma'lumot saqlash | LocalStorage |
-| AI modeli | XGBoost, Scikit-Learn |
+| AI modeli | Oddiy qoida asosidagi hisoblash (JavaScript) |
 | Hosting | GitHub Pages |
 | Dizayn | Responsive, mobile-first, Dark mode |
 
