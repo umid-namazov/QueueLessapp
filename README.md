@@ -1,92 +1,172 @@
-# 🎓 QueueLessapp
+<div align="center">
 
-> Study, plan, and track your academic life — all in one place.
+<img src="splash.png" width="280" alt="QueueLess splash screen">
 
-**QueueLessapp** is an all-in-one productivity web app built for students. It combines a class schedule, homework tracker, exam countdown, Pomodoro focus timer, notes, and an AI study assistant into a single lightweight, offline-friendly interface.
+# ⏳ QueueLess
+
+### Smart Queues. Save Time.
+
+**Navbatni oldindan band qiling, vaqtingizni tejang.**
+
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-QueueLess-2563eb?style=for-the-badge)](https://umid-namazov.github.io/QueueLessapp/)
+![Version](https://img.shields.io/badge/version-1.0.0-blue?style=for-the-badge)
+![License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)
+
+</div>
 
 ---
 
-## 📱 Screenshots
+## 📖 Loyiha haqida
 
-<p align="center">
-  <img src="IMG_20260813_144255_572.jpg" width="260" alt="Splash screen">
-</p>
+**QueueLess** — sartaroshxona, avtoyuvish va klinikalardagi jonli navbatni raqamli jadvalga aylantiruvchi veb-ilova. Mijoz uydan turib bo'sh vaqtni tanlaydi, QR-talon oladi va aynan o'z navbatiga keladi — eshik oldida kutib o'tirmaydi.
 
-| Home / Dashboard | Focus Timer (Pomodoro) | AI Assistant |
-|---|---|---|
-| <img src="IMG_20260813_144255_813.jpg" width="230" alt="Dashboard"> | <img src="IMG_20260813_144255_058.jpg" width="230" alt="Pomodoro"> | <img src="IMG_20260813_144255_789.jpg" width="230" alt="AI Assistant"> |
+Ilova ichida **AI kutish vaqti bashorati** ishlaydi: xizmat turi va soatga qarab navbat qancha davom etishini oldindan hisoblab beradi va eng bo'sh filialni tavsiya qiladi.
 
-| Notes / Board | Full Menu |
+> 🎓 Toshkent, O'zbekiston — 2026. 4 kishilik jamoaning hakaton va universitet loyihasi.
+
+---
+
+## 🎯 Muammo va yechim
+
+| Muammo | QueueLess yechimi |
 |---|---|
-| <img src="IMG_20260813_144255_339.jpg" width="230" alt="Notepad"> | <img src="IMG_20260813_144255_874.jpg" width="230" alt="Menu"> |
+| Navbatda 30–60 daqiqa bekorga kutish | Oldindan vaqt band qilish (slot booking) |
+| Qaysi filial bo'shligini bilmaslik | Xaritada real vaqt kutish ko'rsatkichlari |
+| "Qachon kelay?" degan noaniqlik | AI bashorati — aniq daqiqa |
+| Qog'oz talon, tartibsizlik | QR-kodli raqamli talon |
+| Biznes uchun navbatni boshqarish qiyin | Biznes paneli — chaqirish, jonli mijoz qo'shish |
 
 ---
 
-## ✨ Features
+## 📱 Skrinshotlar
 
-- **📊 Dashboard** — at-a-glance overview of today's classes, pending homework, days until the next exam, and quick-action shortcuts
-- **📅 Schedule** — view daily class timetable with time, room, and instructor
-- **📝 Homework Tracker** — track assignments and deadlines
-- **📚 Exam Countdown** — live countdown to upcoming exams
-- **⏳ Pomodoro Focus Timer** — 25-minute focus sessions with daily session count, weekly minutes, and streak tracking
-- **📒 Notepad** — searchable notes, organized by category (lecture notes, ideas, general)
-- **🎥 Courses** — track online course progress
-- **📊 GPA Calculator** — calculate and monitor GPA
-- **💰 Expense Tracker** — manage student budget and spending
-- **🤖 AI Study Assistant** — chat-based assistant that generates study plans, answers questions about your schedule, tasks, and exams, and gives quick recommendations (e.g. "how many hours should I study per day")
-- **🔔 Reminders** — notifications for upcoming deadlines
-- **☁️ Sync** — sync data across devices
-- **🌙 Dark Mode** — clean dark UI optimized for extended use
-- **💾 Persistent Storage** — data is saved locally so nothing is lost on refresh
+### Mijoz tomoni
+
+| Asosiy sahifa | Vaqt tanlash | QR-talon |
+|:---:|:---:|:---:|
+| <img src="client-home.png" width="230" alt="Mijoz asosiy sahifasi"> | <img src="booking.png" width="230" alt="Vaqt tanlash"> | <img src="ticket.png" width="230" alt="QR talon"> |
+| Faol navbat, AI tavsiya, xizmat toifalari va tavsiya etilgan filiallar | Band / Bo'sh / ⭐ Tavsiya qilingan vaqt oynalari | Tasdiqlangan talon, QR-kod va kutish vaqti |
+
+### Xarita, biznes va AI
+
+| Filiallar xaritasi | Biznes paneli | AI bashorati | Profil |
+|:---:|:---:|:---:|:---:|
+| <img src="map.png" width="175" alt="Xarita"> | <img src="business.png" width="175" alt="Biznes paneli"> | <img src="ai.png" width="175" alt="AI bashorati"> | <img src="profile.png" width="175" alt="Profil"> |
+| Real vaqt kutish ko'rsatkichlari | Qabuldagi raqam, chaqirish, kutayotganlar | XGBoost modeli, aniq daqiqa | Dark mode, push, til sozlamalari |
 
 ---
 
-## 🛠️ Tech Stack
+## ✨ Imkoniyatlar
 
-- HTML5
-- CSS3
-- JavaScript (Vanilla)
-- LocalStorage for data persistence
+### 📱 Mijoz rejimi
+- **Faol navbat kartasi** — talon raqami (B-383), filial nomi, vaqt va qolgan kutish daqiqasi
+- **Xizmat toifalari** — ✂️ Sartarosh, 🚗 Avtoyuvish, 🏥 Klinika
+- **Filiallar ro'yxati** — reyting (⭐ 4.9), navbatdagi kishilar soni va AI kutish vaqti
+- **Vaqt tanlash** — Band / Bo'sh oynalar, AI ⭐ Tavsiya belgisi bilan eng qulay soat
+- **QR-talon** — tasdiqlangan raqamli talon, joyiga borganda skanerlanadi
+- **Talonni bekor qilish** va push-eslatmani sinash
+
+### 🗺️ Xarita
+- Filiallar joylashuvi va **real vaqt kutish ko'rsatkichlari** (4 daq / 12 daq / 0 daq)
+- Manzil bilan to'liq ro'yxat: Yunusobod, Chorsu, Chilonzor, Mirzo Ulug'bek
+
+### 💼 Biznes paneli
+- **HOZIR QABULDA** — joriy xizmat ko'rsatilayotgan raqam katta ko'rinishda
+- **📢 Chaqirish** — keyingi mijozni chaqirish
+- **➕ Jonli mijoz** — ilovasiz kelgan mijozni navbatga qo'shish
+- **Kutayotganlar ro'yxati** — tartib raqami, ism, vaqt va holat
+
+### 🧠 AI moduli
+- **XGBoost & Scikit-Learn** modeli asosida kutish vaqti bashorati (aniqlik: **+79.7%**)
+- Xizmat turi va soatni tanlash → 🚀 Hisoblash → natija daqiqalarda
+- Asosiy sahifada avtomatik tavsiya: *"Hozir Yunusobod filialida kutish atigi 4 daqiqa!"*
+
+### 👤 Profil va sozlamalar
+- Foydalanuvchi ma'lumotlari va telefon raqami
+- 🌙 **Qorong'i rejim** (Dark mode)
+- 🔔 **Push-eslatmalar** — navbatdan 30 va 10 daqiqa oldin
+- 🌐 **Til** — O'zbekcha 🇺🇿
+
+---
+
+## 🛠️ Texnologiyalar
+
+| Qatlam | Texnologiya |
+|---|---|
+| Frontend | HTML5, CSS3, JavaScript (Vanilla) |
+| Ma'lumot saqlash | LocalStorage |
+| AI modeli | XGBoost, Scikit-Learn |
+| Hosting | GitHub Pages |
+| Dizayn | Responsive, mobile-first, Dark mode |
 
 ---
 
 ## 🚀 Live Demo
 
-🔗 [Try it here](https://umid-namazov.github.io/QueueLessapp/)
+🔗 **[https://umid-namazov.github.io/QueueLessapp/](https://umid-namazov.github.io/QueueLessapp/)**
 
-
+Ro'yxatdan o'tish shart emas — havolani ochib, to'rtta rejimni (Mijoz / Biznes / AI / Reja) sinab ko'rishingiz mumkin.
 
 ---
 
-## 📦 Installation
+## 📦 O'rnatish
 
 ```bash
 git clone https://github.com/umid-namazov/QueueLessapp.git
 cd QueueLessapp
 ```
 
-Then simply open `index.html` in your browser — no build step or server required.
+So'ng `index.html` faylini brauzerda oching — build yoki server talab qilinmaydi.
 
 ---
 
-## 🗺️ Roadmap
+## 📂 Fayllar tuzilishi
 
-- [ ] Push notifications for reminders
-- [ ] Cloud sync via Firebase
-- [ ] Exportable PDF study reports
-- [ ] Multi-language support (Uzbek / English / Russian)
-- [ ] PWA support (installable on mobile home screen)
+```
+QueueLessapp/
+├── index.html      # Asosiy sahifa va barcha ekranlar
+├── style.css       # Uslublar, dark mode
+├── script.js       # Navbat mantiqi, AI bashorati, LocalStorage
+├── README.md
+└── *.png           # Skrinshotlar
+```
 
 ---
 
-## 👤 Author
+## 🗺️ Rejalar (Roadmap)
 
-**Umid Namazov**
-AI Engineering Student, Samarqand, Uzbekistan
+- [ ] Real push-bildirishnomalar (Firebase Cloud Messaging)
+- [ ] Backend va real vaqt sinxronizatsiya
+- [ ] Haqiqiy xarita integratsiyasi (Yandex / Google Maps)
+- [ ] Telegram bot orqali navbat band qilish
+- [ ] To'lov tizimi (Payme / Click)
+- [ ] PWA — telefon ekraniga o'rnatiladigan versiya
+- [ ] Ko'p tillilik: O'zbek / Rus / Ingliz
+- [ ] Biznes uchun statistika va hisobotlar
+
+---
+
+## 👤 Muallif
+
+**Umid Namazov Zakirovich**
+AI Engineering talabasi · Samarqand, O'zbekiston
 📧 bek193699@gmail.com
+🔗 [github.com/umid-namazov](https://github.com/umid-namazov)
+
+Loyiha **AETXON** jamoasi tomonidan ishlab chiqilgan.
 
 ---
 
-## 📄 License
+## 📄 Litsenziya
 
-This project is open source and available under the [MIT License](LICENSE).
+Ushbu loyiha ochiq manbali va [MIT litsenziyasi](LICENSE) asosida tarqatiladi.
+
+---
+
+<div align="center">
+
+**⏳ QueueLess — Navbatni jadvalga aylantiramiz.**
+
+Loyiha yoqqan bo'lsa ⭐ qo'yishni unutmang!
+
+</div>
