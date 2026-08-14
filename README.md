@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="splash.png" width="280" alt="QueueLess splash screen">
+<img src="Screenshot_20260814-141311.jpg" width="280" alt="QueueLess splash screen">
 
 # ⏳ QueueLess
 
@@ -44,14 +44,14 @@ Ilova ichida **AI kutish vaqti bashorati** ishlaydi: xizmat turi va soatga qarab
 
 | Asosiy sahifa | Vaqt tanlash | QR-talon |
 |:---:|:---:|:---:|
-| <img src="Screenshot_20260814-141139.jpg" width="230" alt="Mijoz asosiy sahifasi"> | <img src="Screenshot_20260814-141243.png" width="230" alt="Vaqt tanlash"> | <img src="Screenshot_20260814-141205.jpg" width="230" alt="QR talon"> |
+| <img src="Screenshot_20260814-141139.jpg" width="230" alt="Mijoz asosiy sahifasi"> | <img src="Screenshot_20260814-141243.jpg" width="230" alt="Vaqt tanlash"> | <img src="Screenshot_20260814-141205.jpg" width="230" alt="QR talon"> |
 | Faol navbat, AI tavsiya, xizmat toifalari va tavsiya etilgan filiallar | Band / Bo'sh / ⭐ Tavsiya qilingan vaqt oynalari | Tasdiqlangan talon, QR-kod va kutish vaqti |
 
 ### Xarita, biznes va AI
 
 | Filiallar xaritasi | Biznes paneli | AI bashorati | Profil |
 |:---:|:---:|:---:|:---:|
-| <img src="Screenshot_20260814-141201.jpg" width="175" alt="Xarita"> | <img src="Screenshot_20260814-141146.jpg" width="175" alt="Biznes paneli"> | <img src="Screenshot_20260814-141151.jpg" width="175" alt="AI bashorati"> | <img src="Screenshot_20260814-141214.png" width="175" alt="Profil"> |
+| <img src="Screenshot_20260814-141201.jpg" width="175" alt="Xarita"> | <img src="Screenshot_20260814-141146.jpg" width="175" alt="Biznes paneli"> | <img src="Screenshot_20260814-141151.jpg" width="175" alt="AI bashorati"> | <img src="Screenshot_20260814-141214.jpg" width="175" alt="Profil"> |
 | Real vaqt kutish ko'rsatkichlari | Qabuldagi raqam, chaqirish, kutayotganlar | XGBoost modeli, aniq daqiqa | Dark mode, push, til sozlamalari |
 
 ---
