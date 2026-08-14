@@ -51,7 +51,7 @@ Ilova ichida **AI kutish vaqti bashorati** ishlaydi: xizmat turi va soatga qarab
 
 | Filiallar xaritasi | Biznes paneli | AI bashorati | Profil |
 |:---:|:---:|:---:|:---:|
-| <img src="map.png" width="175" alt="Xarita"> | <img src="Screenshot_20260814-141146.png" width="175" alt="Biznes paneli"> | <img src="Screenshot_20260814-141151.png" width="175" alt="AI bashorati"> | <img src="profile.png" width="175" alt="Profil"> |
+| <img src="Screenshot_20260814-141201.png" width="175" alt="Xarita"> | <img src="Screenshot_20260814-141146.png" width="175" alt="Biznes paneli"> | <img src="Screenshot_20260814-141151.png" width="175" alt="AI bashorati"> | <img src="profile.png" width="175" alt="Profil"> |
 | Real vaqt kutish ko'rsatkichlari | Qabuldagi raqam, chaqirish, kutayotganlar | XGBoost modeli, aniq daqiqa | Dark mode, push, til sozlamalari |
 
 ---
