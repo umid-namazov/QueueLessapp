@@ -77,7 +77,7 @@ Ilova ichida **AI kutish vaqti bashorati** ishlaydi: xizmat turi va soatga qarab
 - **Kutayotganlar ro'yxati** — tartib raqami, ism, vaqt va holat
 
 ### 🧠 AI moduli
-- **XGBoost & Scikit-Learn** modeli asosida kutish vaqti bashorati (aniqlik: **+79.7%**)
+- Oddiy formula asosida kutish vaqtini hisoblash: xizmat turi va navbatdagi odamlar soniga qarab taxminiy vaqt chiqariladi. Kelajakda XGBoost/Scikit-Learn asosidagi haqiqiy ML modelga o'tish rejalashtirilgan.
 - Xizmat turi va soatni tanlash → 🚀 Hisoblash → natija daqiqalarda
 - Asosiy sahifada avtomatik tavsiya: *"Hozir Yunusobod filialida kutish atigi 4 daqiqa!"*
 
