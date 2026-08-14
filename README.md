@@ -44,7 +44,7 @@ Ilova ichida **AI kutish vaqti bashorati** ishlaydi: xizmat turi va soatga qarab
 
 | Asosiy sahifa | Vaqt tanlash | QR-talon |
 |:---:|:---:|:---:|
-| <img src="Screenshot_20260814-141139.png" width="230" alt="Mijoz asosiy sahifasi"> | <img src="booking.png" width="230" alt="Vaqt tanlash"> | <img src="ticket.png" width="230" alt="QR talon"> |
+| <img src="Screenshot_20260814-141139.png" width="230" alt="Mijoz asosiy sahifasi"> | <img src="booking.png" width="230" alt="Vaqt tanlash"> | <img src="Screenshot_20260814-141205.png" width="230" alt="QR talon"> |
 | Faol navbat, AI tavsiya, xizmat toifalari va tavsiya etilgan filiallar | Band / Bo'sh / ⭐ Tavsiya qilingan vaqt oynalari | Tasdiqlangan talon, QR-kod va kutish vaqti |
 
 ### Xarita, biznes va AI
